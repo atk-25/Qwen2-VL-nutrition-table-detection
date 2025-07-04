@@ -340,7 +340,7 @@ if __name__ == "__main__":
         model.push_to_hub(args.push_to_hub_repo_id_adapters)
         logger.info(f"lora adapters and processor pushed to repo_id: {args.push_to_hub_repo_id_adapters}")
 
-    # evaluate finetuned model using Intersection Over Union (IOU) metric.
+    # evaluate finetuned model using Intersection Over Union (IOU) metric
     iou = evaluate_model_iou(model, processor=processor, device=device, dataset=eval_ds_raw, system_message=system_message,
                              prompt=prompt, max_new_tokens=args.max_new_tokens)
     logger.info(f"iou score, over eval_dataset:   {iou:.2f}")
