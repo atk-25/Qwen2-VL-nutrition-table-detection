@@ -2,7 +2,7 @@
 # --use_quantized_model \
 # --qlora_model_id "<QLORA_MODEL_ID>" \
 
-python evaluate_nutrition_table_detection.py \
+python evaluate_nutrition_table_detection_iou.py \
     --base_model_id "Qwen/Qwen2-VL-7B-Instruct" \
     --lora_adapters_id "LORA_ADAPTERS_ID" \
     --repos_private \
