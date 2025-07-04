@@ -13,8 +13,8 @@ python finetune_qlora_nutrition_table_detection.py \
     --push_to_hub_adapters \
     --create_new_repo \
     --create_new_repo_adapters \
-    --push_to_hub_repo_id "REPO_ID" \
-    --push_to_hub_repo_id_adapters "REPO_ID_ADAPTERS" \
+    --push_to_hub_repo_id "<REPO_ID>" \
+    --push_to_hub_repo_id_adapters "<REPO_ID_ADAPTERS>" \
     --repos_private \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
