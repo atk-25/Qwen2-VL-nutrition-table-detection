@@ -4,7 +4,7 @@
 
 python evaluate_nutrition_table_detection_iou.py \
     --base_model_id "Qwen/Qwen2-VL-7B-Instruct" \
-    --lora_adapters_id "LORA_ADAPTERS_ID" \
+    --lora_adapters_id "<LORA_ADAPTERS_ID>" \
     --repos_private \
     --attn_implementation "flash_attention_2" \
     --max_new_tokens 512 \
