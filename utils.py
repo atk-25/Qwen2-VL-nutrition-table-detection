@@ -235,9 +235,9 @@ def parse_bbox_model_output(image, output_text, image_idx=0):
                 ValidateModelOutputFormat.model_validate(output_text_parsed[i])   # validate model output format
                 bbox_relative = output_text_parsed[i]['bbox_2d']
                 abs_x_1 = int(bbox_relative[0] / norm_width * im_width)
-                abs_y_1 = int(bbox_relative[1] / norm_width * im_height)
+                abs_y_1 = int(bbox_relative[1] / norm_height * im_height)
                 abs_x_2 = int(bbox_relative[2] / norm_width * im_width)
-                abs_y_2 = int(bbox_relative[3] / norm_width * im_height)
+                abs_y_2 = int(bbox_relative[3] / norm_height * im_height)
                 bbox_absolute = [abs_x_1, abs_y_1, abs_x_2, abs_y_2]
                 output_text_parsed[i]['bbox_2d'] = bbox_absolute
                 predicted_tables.append(output_text_parsed[i])
