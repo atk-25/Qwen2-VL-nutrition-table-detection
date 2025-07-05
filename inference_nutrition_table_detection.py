@@ -125,7 +125,9 @@ if __name__ == "__main__":
     prompt = "Detect the bounding boxes of the nutrition tables present in the image. " \
              "Output format for each detected table should be as follows: {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
 
-    image, output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image_url=args.image_url,
+    image = Image.open(args.image_url)
+
+    output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image=image,
                                                              system_message=system_message, prompt=prompt, max_new_tokens=args.max_new_tokens)
     predicted_tables = parse_bbox_model_output(image, output_text)
     bbox_visualize_predicted_tables(image, predicted_tables)
