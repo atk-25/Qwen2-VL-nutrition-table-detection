@@ -59,7 +59,7 @@ def bbox_visualize_raw_ds(example):
 
         color = colors[i%3]
         draw.rectangle((bbox[:2], bbox[2:]), outline=color, width=int(15/2000*im_width))
-        draw.text((bbox[0] + 8, bbox[1] + 6), label, fill=color, font_size=int(0.1*(abs_x_2-abs_x_1)))
+        draw.text((bbox[0] + 8, bbox[1] + 6), label, fill=color, font_size=(1 + int(0.1*(abs_x_2-abs_x_1))))
 
     plt.imshow(image)
     plt.axis('off')
@@ -209,7 +209,7 @@ def nutrition_table_detection_inference(model, processor, device, image_url, sys
         generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
     )
 
-    return image_inputs[0], output_text[0]
+    return output_text[0]
 
 
 # class to validate model output format using pydantic BaseModel class
@@ -266,7 +266,7 @@ def bbox_visualize_predicted_tables(image, predicted_tables):
         bbox_absolute = predicted_tables[i]['bbox_2d']
         draw.rectangle((bbox_absolute[:2], bbox_absolute[2:]), outline=color, width=int(15 / 2000 * im_width))
         draw.text((bbox_absolute[0] + 8, bbox_absolute[1] + 6), label, fill=color,
-                  font_size=int(0.1 * (bbox_absolute[2] - bbox_absolute[0])))
+                  font_size=(1 + int(0.1 * (bbox_absolute[2] - bbox_absolute[0]))))
 
     plt.imshow(image)
     plt.axis('off')
@@ -294,10 +294,10 @@ def evaluate_model_iou(model, processor, device, dataset, system_message, prompt
                 {"category_name": category_names[k], "bbox_ground_truth_abs": bbox_ground_truth_abs,
                  "bbox_predicted_abs": None, "iou": 0})
 
-        image, output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image_url=image_url,
+        output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image_url=image_url,
                                                                  system_message=system_message, prompt=prompt,
                                                                  max_new_tokens=max_new_tokens)
-        predicted_tables = parse_bbox_model_output(image, output_text, image_idx=i)
+        predicted_tables = parse_bbox_model_output(image_url, output_text, image_idx=i)
 
         # For each ground truth table in the image, calculate iou's with respect to each of the detected tables of the same category name.
         # The predicted table with the largest iou is selected to be the predicted bbox for it's corresponding ground truth table.
