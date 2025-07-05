@@ -159,7 +159,7 @@ def calculate_max_num_img_tokens(images, patch_size, merge_size):
 
 
 # inference function for object detection
-def nutrition_table_detection_inference(model, processor, device, image_url, system_message, prompt, max_new_tokens=512):
+def nutrition_table_detection_inference(model, processor, device, image, system_message, prompt, max_new_tokens=512):
 
     messages = [
         {
@@ -176,7 +176,7 @@ def nutrition_table_detection_inference(model, processor, device, image_url, sys
             "content": [
                 {
                     "type": "image",
-                    "image": image_url,
+                    "image": image,
                 },
                 {
                     "type": "text",
@@ -282,22 +282,22 @@ def evaluate_model_iou(model, processor, device, dataset, system_message, prompt
     iou_all = []
     for i in range(len(dataset['image'])):  # iterate through all examples
 
-        image_url = dataset['image'][i]
+        image = dataset['image'][i]
         category_names = dataset["objects"][i]["category_name"]  # get category names of the tables present in the image
         bboxes_ds = dataset["objects"][i]["bbox"]  # get bounding boxes of the categories present in the image
 
         ground_truth_tables = []
         for k in range(len(bboxes_ds)):  # iterate through all the tables in the image and create a dictionary for each table
-            _, bbox_ground_truth_abs = get_bbox_ds_example(image_url, bboxes_ds[k])
+            _, bbox_ground_truth_abs = get_bbox_ds_example(image, bboxes_ds[k])
             bbox_ground_truth_abs = torch.tensor(bbox_ground_truth_abs)
             ground_truth_tables.append(
                 {"category_name": category_names[k], "bbox_ground_truth_abs": bbox_ground_truth_abs,
                  "bbox_predicted_abs": None, "iou": 0})
 
-        output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image_url=image_url,
+        output_text = nutrition_table_detection_inference(model, processor=processor, device=device, image=image,
                                                                  system_message=system_message, prompt=prompt,
                                                                  max_new_tokens=max_new_tokens)
-        predicted_tables = parse_bbox_model_output(image_url, output_text, image_idx=i)
+        predicted_tables = parse_bbox_model_output(image=image, output_text=output_text, image_idx=i)
 
         # For each ground truth table in the image, calculate iou's with respect to each of the detected tables of the same category name.
         # The predicted table with the largest iou is selected to be the predicted bbox for it's corresponding ground truth table.
