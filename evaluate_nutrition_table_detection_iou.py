@@ -121,11 +121,12 @@ if __name__ == "__main__":
     _, eval_ds_raw = get_dataset(train_dataset=False, eval_dataset=True)
 
     system_message = "You are a Vision Language Model specialized in interpreting visual data from product images. " \
-                     "Your task is to analyze the provided product images and detect the nutrition tables, delivering coordinates " \
-                     "in bbox format {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}. Avoid additional explanation unless absolutely necessary."
-
-    prompt = "Detect the bounding boxes of the nutrition tables present in the image. " \
-             "Output format for each detected table should be as follows: {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
+                     "Your task is to analyze the provided product images and detect the nutrition tables in a certain format. " \
+                     "Focus on delivering accurate, succinct answers based on the visual information. Avoid additional explanation unless absolutely necessary."
+    
+    prompt = "Detect the bounding boxes of the different categories of nutrition tables present in the image. " \
+             "The possible categories are ['nutrition-table', 'nutrition-table-small', 'nutrition-table-text', 'nutrition-table-small-energy']. " \
+             "Deliver coordinates in bbox format {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
 
     # evaluate finetuned model using Intersection Over Union (IOU) metric
     iou = evaluate_model_iou(model, processor=processor, device=device, dataset=eval_ds_raw, system_message=system_message,
