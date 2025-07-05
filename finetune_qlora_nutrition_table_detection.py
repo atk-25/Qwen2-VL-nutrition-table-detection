@@ -310,11 +310,12 @@ if __name__ == "__main__":
     train_ds_raw, eval_ds_raw = get_dataset(train_dataset=True, eval_dataset=True)
 
     system_message = "You are a Vision Language Model specialized in interpreting visual data from product images. " \
-                     "Your task is to analyze the provided product images and detect the nutrition tables, delivering coordinates " \
-                     "in bbox format {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}. Avoid additional explanation unless absolutely necessary."
-
-    prompt = "Detect the bounding boxes of the nutrition tables present in the image. " \
-             "Output format for each detected table should be as follows: {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
+                     "Your task is to analyze the provided product images and detect the nutrition tables in a certain format. " \
+                     "Focus on delivering accurate, succinct answers based on the visual information. Avoid additional explanation unless absolutely necessary."
+    
+    prompt = "Detect the bounding boxes of the different categories of nutrition tables present in the image. " \
+             "The possible categories are ['nutrition-table', 'nutrition-table-small', 'nutrition-table-text', 'nutrition-table-small-energy']. " \
+             "Deliver coordinates in bbox format {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
 
     train_ds = [create_conversation_template_for_training(example, system_message=system_message, prompt=prompt) for example in train_ds_raw]
     eval_ds = [create_conversation_template_for_training(example, system_message=system_message, prompt=prompt) for example in eval_ds_raw]
