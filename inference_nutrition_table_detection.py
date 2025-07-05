@@ -131,5 +131,6 @@ if __name__ == "__main__":
                                                              system_message=system_message, prompt=prompt, max_new_tokens=args.max_new_tokens)
     predicted_tables = parse_bbox_model_output(image, output_text)
     bbox_visualize_predicted_tables(image, predicted_tables)
+    plt.savefig(f"annotated_{args.image_url}")
 
     clear_memory()
