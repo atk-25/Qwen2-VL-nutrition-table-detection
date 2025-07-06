@@ -13,17 +13,41 @@ from datasets import load_dataset
 norm_width, norm_height = 1000, 1000
 
 
+# helper function for dataset to remove label categories in an image other than "nutrition-table"
+def process_dataset(examples):
+    
+    for i in range(len(examples["image"])):
+        indices_to_remove = []
+        for j in range(len(examples["objects"][i]["category_name"])):
+            if examples["objects"][i]["category_name"][j] != "nutrition-table":
+                indices_to_remove.append(j) 
+        if len(indices_to_remove) > 0:       
+            examples["objects"][i]["category_name"] = [item for k, item in enumerate(examples["objects"][i]["category_name"]) if k not in indices_to_remove]
+            examples["objects"][i]["category_id"] = [item for k, item in enumerate(examples["objects"][i]["category_id"]) if k not in indices_to_remove]
+            examples["objects"][i]["bbox"] = [item for k, item in enumerate(examples["objects"][i]["bbox"]) if k not in indices_to_remove]
+
+    return examples
+
+
 def get_dataset(train_dataset=True, eval_dataset=True):
 
     dataset_id = "openfoodfacts/nutrition-table-detection"
 
     if train_dataset:
         train_ds = load_dataset(dataset_id, split="train")
+        train_ds = train_ds.remove_columns(['image_id', 'width', 'height', 'meta'])
+        train_ds_rows_to_remove = [i for i in range(len(train_ds)) if "nutrition-table" in train_ds[i]["objects"]["category_name"]]   # keep only rows if 'nutrition-table' is one of the labeled categories
+        train_ds = train_ds.select(train_ds_rows_to_remove)
+        train_ds = train_ds.map(process_dataset, batched=True)
     else:
         train_ds = None
 
     if eval_dataset:
         eval_ds = load_dataset(dataset_id, split="val")
+        eval_ds = eval_ds.remove_columns(['image_id', 'width', 'height', 'meta'])
+        eval_ds_rows_to_remove = [i for i in range(len(eval_ds)) if "nutrition-table" in eval_ds[i]["objects"]["category_name"]]
+        eval_ds = eval_ds.select(eval_ds_rows_to_remove)
+        eval_ds = eval_ds.map(process_dataset, batched=True)
     else:
         eval_ds = None
 
