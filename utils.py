@@ -13,7 +13,7 @@ from datasets import load_dataset
 norm_width, norm_height = 1000, 1000
 
 
-# helper function for dataset to remove label categories in an image other than "nutrition-table"
+# helper function for dataset to keep only "nutrition-table" category in each row
 def process_dataset(examples):
     
     for i in range(len(examples["image"])):
