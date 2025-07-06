@@ -124,8 +124,7 @@ if __name__ == "__main__":
                      "Your task is to analyze the provided product images and detect the nutrition tables in a certain format. " \
                      "Focus on delivering accurate, succinct answers based on the visual information. Avoid additional explanation unless absolutely necessary."
     
-    prompt = "Detect the bounding boxes of the different categories of nutrition tables present in the image. " \
-             "The possible categories are ['nutrition-table', 'nutrition-table-small', 'nutrition-table-text', 'nutrition-table-small-energy']. " \
+    prompt = "Detect the bounding boxes of nutrition tables present in the image. " \
              "Deliver coordinates in bbox format {'bbox_2d': [x1, y1, x2, y2], 'label': 'category name'}."
 
     # evaluate finetuned model using Intersection Over Union (IOU) metric
