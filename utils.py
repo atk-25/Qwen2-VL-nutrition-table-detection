@@ -35,7 +35,7 @@ def get_dataset(train_dataset=True, eval_dataset=True):
 
     if train_dataset:
         train_ds = load_dataset(dataset_id, split="train")
-        train_ds = train_ds.remove_columns(['image_id', 'width', 'height', 'meta'])
+        train_ds = train_ds.remove_columns(['width', 'height', 'meta'])
         train_ds_rows_to_remove = [i for i in range(len(train_ds)) if "nutrition-table" in train_ds[i]["objects"]["category_name"]]   # keep only rows if 'nutrition-table' is one of the labeled categories
         train_ds = train_ds.select(train_ds_rows_to_remove)
         train_ds = train_ds.map(process_dataset, batched=True)
@@ -44,7 +44,7 @@ def get_dataset(train_dataset=True, eval_dataset=True):
 
     if eval_dataset:
         eval_ds = load_dataset(dataset_id, split="val")
-        eval_ds = eval_ds.remove_columns(['image_id', 'width', 'height', 'meta'])
+        eval_ds = eval_ds.remove_columns(['width', 'height', 'meta'])
         eval_ds_rows_to_remove = [i for i in range(len(eval_ds)) if "nutrition-table" in eval_ds[i]["objects"]["category_name"]]
         eval_ds = eval_ds.select(eval_ds_rows_to_remove)
         eval_ds = eval_ds.map(process_dataset, batched=True)
