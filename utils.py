@@ -245,6 +245,7 @@ class ValidateModelOutputFormat(BaseModel):
 # function to parse model output to extract bounding box coordinates and convert the relative coordinates to absolute coordinates
 def parse_bbox_model_output(image, output_text, image_idx=0):
     predicted_tables = []
+    ### The model output or any of the predicted table outputs are ignored if they are not in the expected format and can not be parsed.
     try:
         output_text_parsed = ast.literal_eval(output_text)
 
@@ -267,14 +268,16 @@ def parse_bbox_model_output(image, output_text, image_idx=0):
                 predicted_tables.append(output_text_parsed[i])
             except Exception as e:
                 print(f"Validation Error: {e}")
+                print(f"image[{image_idx}]: predicted_table-{i} output --> {output_text_parsed[i]}")
                 skipped_tables_count += 1
 
             if skipped_tables_count > 0:
-                print(f"image[{image_idx}]: {skipped_tables_count} predicted table(s) skipped since the model output for these tables is not in the expected format")
+                print(f"image[{image_idx}]: {skipped_tables_count} predicted table(s) skipped since the model output(s) for these table(s) are not in the expected format")
     except Exception as e:
         print(f"Validation Error: {e}")
         print(
             f"image[{image_idx}]: the model output for this image can not be parsed into the expected format. ---> predicted_tables = []")
+        print(f"image[{image_idx}]: model output --> {output_text}")
 
     return predicted_tables
 
