@@ -323,21 +323,20 @@ def evaluate_model_iou(model, processor, device, dataset, system_message, prompt
                                                                  max_new_tokens=max_new_tokens)
         predicted_tables = parse_bbox_model_output(image=image, output_text=output_text, image_idx=i)
 
-        # For each ground truth table in the image, calculate iou's with respect to each of the detected tables of the same category name.
-        # The predicted table with the largest iou is selected to be the predicted bbox for it's corresponding ground truth table.
-        # If all the iou's are zero, then it is assumed that the current table is not detected and an iou=0 is used for calculating average iou.
-
+        ### Assign predicted tables to the ground truth tables present in the image
+        # For each ground truth table in the image, calculate iou's with respect to each of the detected tables.
+        # The detected table with the largest iou is selected to be the predicted bbox for it's corresponding ground truth table.
+        # If all the iou's are zero, then it is assumed that the ground truth table is not detected and an iou=0 is used for calculating average iou.
         for ground_truth_table in ground_truth_tables:
             iou_max = 0
             for predicted_table in predicted_tables:
-                if predicted_table["label"] == ground_truth_table["category_name"]:
-                    bbox_ground_truth_abs = ground_truth_table["bbox_ground_truth_abs"].reshape(1, 4)
-                    bbox_predicted_abs = torch.tensor(predicted_table["bbox_2d"]).reshape(1, 4)
-                    iou = ops.box_iou(bbox_ground_truth_abs, bbox_predicted_abs)
-                    if iou > iou_max:
-                        ground_truth_table["bbox_predicted_abs"] = bbox_predicted_abs
-                        ground_truth_table["iou"] = iou
-                        iou_max = iou
+                bbox_ground_truth_abs = ground_truth_table["bbox_ground_truth_abs"].reshape(1, 4)
+                bbox_predicted_abs = torch.tensor(predicted_table["bbox_2d"]).reshape(1, 4)
+                iou = ops.box_iou(bbox_ground_truth_abs, bbox_predicted_abs)
+                if iou > iou_max:
+                    ground_truth_table["bbox_predicted_abs"] = bbox_predicted_abs
+                    ground_truth_table["iou"] = iou
+                    iou_max = iou
 
         iou_per_image_all = []
         for ground_truth_table in ground_truth_tables:
