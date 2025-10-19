@@ -1,4 +1,4 @@
-# Qwen2-VL-nutrition-table-detection
+# Vision-Language Model Fine-tuning for Object Detection (Qwen2-VL-nutrition-table-detection)
 
 ## Introduction
 
